@@ -52,8 +52,10 @@ stow -d "$DOTFILES_DIR" -t "$HOME" -R "${PACKAGES[@]}"
 
 # --- 4. TPM plugins (resurrect, continuum, menus, mem-cpu-load)
 log "Tmux plugins"
-# TPM needs a tmux server to read the plugin list from ~/.tmux.conf
-tmux start-server \; new-session -d -s dotfiles-install 2>/dev/null || true
+# TPM reads TMUX_PLUGIN_MANAGER_PATH from the tmux server environment. A server that
+# was already running (or one that didn't load ~/.tmux.conf) won't have it, so set it.
+tmux has-session 2>/dev/null || tmux new-session -d -s dotfiles-install
+tmux set-environment -g TMUX_PLUGIN_MANAGER_PATH "$HOME/.tmux/plugins/"
 "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 # tmux-mem-cpu-load is C++ and must be compiled (needs cmake + g++)
 mem="$HOME/.tmux/plugins/tmux-mem-cpu-load"
