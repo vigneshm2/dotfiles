@@ -15,11 +15,14 @@ if [[ $(uname -s) == Darwin ]]; then
   for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do
     [[ -x $b ]] && { eval "$("$b" shellenv)"; break; }
   done
-  brew install zsh tmux stow git curl uv rust zoxide pueue
+  brew install zsh tmux stow git curl uv rust zoxide pueue zsh-patina
 else
-  sudo apt-get update
-  sudo apt-get install -y zsh tmux stow git curl build-essential cmake g++
   export PATH="$HOME/.local/bin:$PATH"
+  # Skip apt's zsh (5.8.1 on Ubuntu 22.04) if one is already on PATH, e.g. a source build in ~/.local
+  apt_pkgs=(tmux stow git curl build-essential cmake g++)
+  have zsh || apt_pkgs+=(zsh)
+  sudo apt-get update
+  sudo apt-get install -y "${apt_pkgs[@]}"
   have uv || curl -LsSf https://astral.sh/uv/install.sh | sh
   # Rust toolchain (rustup), then cargo-built tools (zoxide, pueue)
   have cargo || curl -fsSL https://sh.rustup.rs | sh -s -- -y
@@ -27,6 +30,7 @@ else
   . "$HOME/.cargo/env"
   have zoxide || cargo install --locked zoxide
   have pueue  || cargo install --locked pueue pueued
+  have zsh-patina || cargo install --locked zsh-patina
 fi
 
 # --- 2. Oh My Zsh, plugins, pure prompt, TPM
@@ -37,6 +41,7 @@ if [[ ! -d $HOME/.oh-my-zsh ]]; then
 fi
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 clone https://github.com/MichaelAquilina/zsh-you-should-use "$ZSH_CUSTOM/plugins/you-should-use"
+clone https://github.com/michel-kraemer/zsh-patina "$ZSH_CUSTOM/plugins/zsh-patina"
 clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 
@@ -70,6 +75,13 @@ if [[ ${SHELL:-} != "$zsh_path" ]]; then
   log "Setting default shell to $zsh_path"
   grep -qx "$zsh_path" /etc/shells || echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
   sudo chsh -s "$zsh_path" "$USER"
+fi
+
+# --- 6. zsh-patina self-check (informational only; never fails the install)
+if have zsh-patina; then
+  log "zsh-patina check"
+  ZSH_PATINA_CONFIG_PATH="$DOTFILES_DIR/zsh/patina.toml" zsh-patina check || \
+    echo "    zsh-patina reported problems (see above). If it is the zsh version (needs >= 5.9), build a newer zsh into ~/.local, or ignore this and keep your current zsh."
 fi
 
 log "Done. For machine-specific config , run for e.g.:"

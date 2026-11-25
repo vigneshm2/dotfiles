@@ -9,6 +9,8 @@ export EDITOR='vim'
 
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""   # prompt is pure, loaded below
+# Must be set before oh-my-zsh.sh loads the zsh-patina plugin
+export ZSH_PATINA_CONFIG_PATH="${${(%):-%x}:A:h}/patina.toml"   # resolves the stow symlink back to the repo
 zstyle ':omz:update' mode auto
 ENABLE_CORRECTION="false"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
@@ -20,7 +22,7 @@ plugins=(
   you-should-use
   zsh-autosuggestions
   zoxide
-  zsh-syntax-highlighting
+  zsh-patina
 )
 source $ZSH/oh-my-zsh.sh
 
