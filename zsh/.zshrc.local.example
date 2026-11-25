@@ -1,5 +1,5 @@
 # Copy to ~/.zshrc.local (untracked) and edit per machine.
-# alias de='docker exec -it latest bash -c "cd /data/code && exec bash"'
-# export NODE_EXTRA_CA_CERTS="$HOME/.local/certs/ti-ca-bundle.pem"
-# export PATH="$HOME/.local/npm-global/bin:$PATH"
+alias de='docker exec -it latest bash -c "cd /data/code && exec bash"'
+export NODE_EXTRA_CA_CERTS="$HOME/.local/certs/ti-ca-bundle.pem"
+export PATH="$HOME/.local/npm-global/bin:$PATH"
 # export CUDA_HOME=/usr/local/cuda

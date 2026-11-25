@@ -1,23 +1,23 @@
-DOTFILES TODO - potential additions
+DOTFILES TODO
 
-TO LOOK INTO
-- zoxide          smarter `cd`: `z edge` jumps to ~/edgeai-modeloptimization after you've visited it once
-                  (you ran `cd` ~290 times). Add `eval "$(zoxide init zsh)"` to .zshrc.
-- zsh-autosuggestions  greyed-out suggestion from history as you type, accept with right arrow.
-                  Clone into ~/.oh-my-zsh/custom/plugins/ and add to plugins=(...) in .zshrc.
-- fzf             fuzzy finder; gives Ctrl-R fuzzy history search. Add `source <(fzf --zsh)` to .zshrc.
-- util package    track ~/util (netron_view etc.) as a stow package so it exists on every machine.
-                  Check scripts for hardcoded paths first.
+DONE
+- zoxide, zsh-autosuggestions, zsh-syntax-highlighting, sudo, extract, you-should-use plugins
+- rust (rustup) + zoxide + pueue installed via cargo in install.sh
+- bin/ (netron_view etc.) tracked, on PATH via ~/dotfiles/bin
+- zsh_aliases tracked (pueue, uvr)
+- tmux plugins: cmake/g++ + mem-cpu-load build, TPM install with a temp tmux server
+- source machine switched to stow
 
-NICE-TO-HAVES
-- rg (ripgrep)    very fast `grep -r` that respects .gitignore. Already installed on this machine.
-- fd              friendlier, faster `find` (`fd foo` instead of `find . -name '*foo*'`).
-- bat             `cat` with syntax highlighting and line numbers.
-- eza             modern `ls` with colours, git status column, tree view.
-- HISTSIZE/SAVEHIST=100000 and HIST_IGNORE_DUPS in .zshrc: bigger history, no consecutive duplicates.
+TO DO
+- Delete stale ~/util (duplicate of bin/netron_view); check scripts for hardcoded paths
+- Test install.sh on a fresh Ubuntu machine/container (not yet run end to end)
+- HISTSIZE/SAVEHIST=100000 and HIST_IGNORE_DUPS in .zshrc (undecided)
 
-DECIDED AGAINST (for now)
+NOT NOW
+- fzf, eza, fd, bat, rg (rg is currently only a Claude Code shell function)
+
+DECIDED AGAINST
 - git aliases/config (zsh git plugin covers it; git must be set up before cloning anyway)
-- tmux / pueue aliases, pueue and htop configs (nothing worth tracking)
+- tmux / pueue configs, htop config (nothing worth tracking)
 - .ssh/config (work secrets risk)
 - vim config (unmodded vim), VS Code settings (Settings Sync)

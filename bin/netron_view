@@ -1,0 +1,27 @@
+#!/bin/bash
+# View an ONNX model in Netron, served in the background on a fixed port.
+# Re-running kills any previous instance on that port and starts a fresh one.
+set -e
+
+PORT=8001
+PID_FILE="/tmp/netron_viewer_${PORT}.pid"
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <path/to/model.onnx>"
+    exit 1
+fi
+
+MODEL_PATH="$1"
+
+if [ -f "$PID_FILE" ]; then
+    OLD_PID=$(cat "$PID_FILE")
+    if kill -0 "$OLD_PID" 2>/dev/null; then
+        kill "$OLD_PID"
+    fi
+    rm -f "$PID_FILE"
+fi
+
+nohup netron -p "$PORT" "$MODEL_PATH" >/tmp/netron_viewer_${PORT}.log 2>&1 &
+echo $! > "$PID_FILE"
+
+echo "Netron serving '$MODEL_PATH' on http://localhost:$PORT (pid $(cat "$PID_FILE"))"

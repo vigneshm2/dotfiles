@@ -13,20 +13,28 @@ log "Packages"
 if [[ $(uname -s) == Darwin ]]; then
   have brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   eval "$( (/opt/homebrew/bin/brew || /usr/local/bin/brew) shellenv 2>/dev/null)" || true
-  brew install zsh tmux stow git curl uv
+  brew install zsh tmux stow git curl uv rust zoxide pueue
 else
   sudo apt-get update
-  sudo apt-get install -y zsh tmux stow git curl
+  sudo apt-get install -y zsh tmux stow git curl build-essential cmake g++
   export PATH="$HOME/.local/bin:$PATH"
   have uv || curl -LsSf https://astral.sh/uv/install.sh | sh
+  # Rust toolchain (rustup), then cargo-built tools (zoxide, pueue)
+  have cargo || curl -fsSL https://sh.rustup.rs | sh -s -- -y
+  # shellcheck disable=SC1091
+  . "$HOME/.cargo/env"
+  have zoxide || cargo install --locked zoxide
+  have pueue  || cargo install --locked pueue pueued
 fi
 
-# --- 2. Oh My Zsh, pure prompt, TPM
+# --- 2. Oh My Zsh, plugins, pure prompt, TPM
 log "Frameworks"
 if [[ ! -d $HOME/.oh-my-zsh ]]; then
   RUNZSH=no CHSH=no KEEP_ZSHRC=yes sh -c \
     "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+clone https://github.com/MichaelAquilina/zsh-you-should-use "$ZSH_CUSTOM/plugins/you-should-use"
 clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 
@@ -42,7 +50,15 @@ stow -d "$DOTFILES_DIR" -t "$HOME" -R "${PACKAGES[@]}"
 
 # --- 4. TPM plugins (resurrect, continuum, menus, mem-cpu-load)
 log "Tmux plugins"
+# TPM needs a tmux server to read the plugin list from ~/.tmux.conf
+tmux start-server \; new-session -d -s dotfiles-install 2>/dev/null || true
 "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+# tmux-mem-cpu-load is C++ and must be compiled (needs cmake + g++)
+mem="$HOME/.tmux/plugins/tmux-mem-cpu-load"
+if [[ -d $mem && ! -x $mem/tmux-mem-cpu-load ]]; then
+  (cd "$mem" && cmake . && make)
+fi
+tmux kill-session -t dotfiles-install 2>/dev/null || true
 
 # --- 5. Default shell
 zsh_path="$(command -v zsh)"

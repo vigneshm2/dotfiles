@@ -1,0 +1,4 @@
+alias pu='pueue'
+alias puf='pueue follow'
+alias pus='pueue status'
+alias uvr='uv run'
