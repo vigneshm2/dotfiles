@@ -12,7 +12,9 @@ clone() { [[ -d $2 ]] || git clone --depth=1 "$1" "$2"; }   # clone <url> <dir>
 log "Packages"
 if [[ $(uname -s) == Darwin ]]; then
   have brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  eval "$( (/opt/homebrew/bin/brew || /usr/local/bin/brew) shellenv 2>/dev/null)" || true
+  for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    [[ -x $b ]] && { eval "$("$b" shellenv)"; break; }
+  done
   brew install zsh tmux stow git curl uv rust zoxide pueue
 else
   sudo apt-get update
