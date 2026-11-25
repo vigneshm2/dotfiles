@@ -17,7 +17,7 @@ moved to `*.bak` first. Restart the shell afterwards.
 
 Each top-level directory is a stow package that mirrors `$HOME`:
 
-- `zsh/`  - `.zshrc`, `.zsh_aliases`, `.zshrc.local.example`
+- `zsh/`  - `.zshrc`, `.zsh_aliases`
 - `tmux/` - `.tmux.conf`
 - `bin/`  - personal scripts, on PATH via `~/dotfiles/bin` (not stowed)
 
@@ -25,7 +25,7 @@ Edit `~/.zshrc` etc. as usual. They are symlinks, so the change lands in this re
 
 ## Machine-specific config
 
-Copy `zsh/.zshrc.local.example` to `~/.zshrc.local` and edit it. It is gitignored,
+Copy `zshrc.local.example` to `~/.zshrc.local` and edit it. It is gitignored,
 so proxies, certs and per-machine aliases stay out of the repo.
 
 ## Adding things

@@ -72,4 +72,5 @@ if [[ ${SHELL:-} != "$zsh_path" ]]; then
   sudo chsh -s "$zsh_path" "$USER"
 fi
 
-log "Done. Put machine-specific config in ~/.zshrc.local (see zsh/.zshrc.local.example), then restart your shell."
+log "Done. For machine-specific config , run for e.g.:"
+echo "    cp $DOTFILES_DIR/zshrc.local.example ~/.zshrc.local"
