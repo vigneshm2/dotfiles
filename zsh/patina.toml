@@ -1,0 +1,10 @@
+# zsh-patina config. Path is set via ZSH_PATINA_CONFIG_PATH in .zshrc.
+# After editing, restart the shared daemon with `zsh-patina restart`.
+
+[highlighting]
+# Built-in theme ("patina", "simple") or "file:/path/mytheme.toml"
+theme = "patina"
+
+dynamic = { callables = true, paths = "complete" } # (paths: none | partial | complete)
+# Highlight AUTO_CD targets as "command" or "directory"
+# autocd_style = "directory"

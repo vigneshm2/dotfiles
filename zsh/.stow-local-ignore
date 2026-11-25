@@ -1,0 +1,7 @@
+\.stow-local-ignore
+\.git
+\.gitignore
+README.*
+LICENSE.*
+# Read in place via ZSH_PATINA_CONFIG_PATH, not linked into $HOME
+patina\.toml
