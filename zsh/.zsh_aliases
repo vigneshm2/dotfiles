@@ -1,5 +1,5 @@
 alias pu='pueue'
 alias puf='pueue follow'
-alias pus='pueue status'
+alias pus='pueue status columns=id,status,label,dependencies,start,end'
 alias uvr='uv run'
-alias ta='tmux a'
+alias ta='tmux a -t'
